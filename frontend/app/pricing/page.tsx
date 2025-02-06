@@ -3,9 +3,11 @@
 import { Check } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-
+import { loadStripe } from "@stripe/stripe-js"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+
+const stripePromise = loadStripe("pk_test_51QpQErB0UHxAO77NkdVXSLwI6qEmiknyRgAVxqaBcXrPkpA74EWMpZFt917KNMaawv1rbxVnHDnmWwg5v82GICnQ00DsCbs0qQ")
 
 const plans = [
   {
@@ -19,6 +21,7 @@ const plans = [
       "Standard support",
       "Real-time threat monitoring",
     ],
+    priceId: "prod_Rj4zOAMOSHgKkJ", // Replace with actual price ID from Stripe
   },
   {
     name: "Professional",
@@ -33,6 +36,7 @@ const plans = [
       "Custom rules engine",
       "API access",
     ],
+    priceId: "prod_Rj58cmTfCNV0YI", // Replace with actual price ID from Stripe
   },
   {
     name: "Enterprise",
@@ -50,6 +54,30 @@ const plans = [
     ],
   },
 ]
+
+async function handleCheckout(priceId: string) {
+  const stripe = await stripePromise
+  if (!stripe) {
+    console.error("Stripe is not loaded.")
+    return
+  }
+
+  const response = await fetch("/api/create-checkout-session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ priceId }),
+  })
+
+  const session = await response.json()
+
+  // Redirect to Stripe Checkout
+  const result = await stripe.redirectToCheckout({ sessionId: session.id })
+  if (result.error) {
+    console.error(result.error.message)
+  }
+}
 
 export default function PricingPage() {
   return (
@@ -98,13 +126,11 @@ export default function PricingPage() {
               </ul>
             </CardContent>
             <CardFooter className="mt-auto">
-              {index === 0 && (
-                <Button className="w-full" variant="outline">
+              {plan.priceId ? (
+                <Button className="w-full" onClick={() => handleCheckout(plan.priceId)}>
                   Continue
                 </Button>
-              )}
-              {index === 1 && <Button className="w-full">Continue</Button>}
-              {index === 2 && (
+              ) : (
                 <Link href="/contact" className="w-full">
                   <Button className="w-full" variant="outline">
                     Contact Us
@@ -118,4 +144,3 @@ export default function PricingPage() {
     </div>
   )
 }
-

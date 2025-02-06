@@ -1,38 +1,38 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from services.email_service import EmailService
 
-# Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
-# Initialize EmailService (can be extended for different cloud providers)
+# Initialize email service
 email_service = EmailService()
 
-# Health check endpoint
+# Health check route
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "healthy"}), 200
 
-# Email sending endpoint
+# Email sending route
 @app.route('/send-email', methods=['POST'])
 def send_email():
-    data = request.json
-    if not data or 'sender' not in data or 'recipient' not in data:
-        return jsonify({"error": "Missing required fields"}), 400
+    try:
+        data = request.json
+        sender = data.get('sender')
+        recipient = data.get('recipient')
+        subject = data.get('subject')
+        body = data.get('body')
 
-    # Extract email details from the request body
-    sender = data['sender']
-    recipient = data['recipient']
-    subject = data.get('subject', 'No Subject')
-    body_text = data.get('body', '')
+        if not all([sender, recipient, subject, body]):
+            return jsonify({"error": "All fields (sender, recipient, subject, body) are required"}), 400
 
-    # Use the EmailService to send the email
-    response = email_service.send_email(sender, recipient, subject, body_text)
+        response = email_service.send_email(sender, recipient, subject, body)
+        if response.get("status") != "success":
+            return jsonify({"error": "Failed to send email"}), 500
 
-    if response['status'] == 'success':
         return jsonify({"message": "Email sent successfully"}), 200
-    else:
-        return jsonify({"error": response['message']}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-# Run the app in development mode (adjust for production deployment)
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
