@@ -29,7 +29,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="container pt-32 pb-32 md:pt-40 md:pb-40">
+    <div className="container mx-auto pt-32 pb-32 md:pt-40 md:pb-40">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

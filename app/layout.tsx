@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", GeistSans.variable, GeistMono.variable)}>
+      <body className={cn("flex-1 px-4 sm:px-6 lg:px-8 min-h-screen bg-background font-sans antialiased", GeistSans.variable, GeistMono.variable)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="encryptgate-theme">
           <div className="relative flex min-h-screen flex-col">
             <Navigation />
