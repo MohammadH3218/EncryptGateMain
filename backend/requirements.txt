@@ -1,0 +1,3 @@
+Flask==2.2.3       # Lightweight web framework for Python
+boto3==1.26.20     # AWS SDK for Python (used to integrate AWS services)
+python-dotenv==1.0.0  # For loading environment variables from .env file (optional)
