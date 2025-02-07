@@ -98,7 +98,7 @@ export default function Home() {
                   </div>
                   <p className="mt-4 text-sm text-muted-foreground">
                     Triple-layer sandbox architecture ensures complete isolation of threats, protecting your
-                    organization's infrastructure.
+                    organization&apos;s infrastructure.
                   </p>
                 </CardContent>
               </Card>
@@ -144,8 +144,8 @@ export default function Home() {
               Start Securing Your Email Communications Today
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
-              Join leading organizations in protecting their email infrastructure with EncryptGate's advanced security
-              platform.
+              Join leading organizations in protecting their email infrastructure with EncryptGate&apos;s advanced
+              security platform.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/contact">

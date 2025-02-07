@@ -64,7 +64,7 @@ export default function AboutPage() {
       <div className="mx-auto mt-32 max-w-3xl text-center">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Join Us in Securing the Future</h2>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          We're on a mission to make email communications safer for organizations worldwide. Our team of security
+          We&apos;re on a mission to make email communications safer for organizations worldwide. Our team of security
           experts and AI researchers work tirelessly to stay ahead of emerging threats and provide cutting-edge
           protection for our customers.
         </p>

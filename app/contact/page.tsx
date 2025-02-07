@@ -56,8 +56,8 @@ export default function ContactPage() {
       >
         <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">Get in Touch</h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Have questions about EncryptGate? We're here to help. Fill out the form below and we'll get back to you
-          shortly.
+          Have questions about EncryptGate? We&apos;re here to help. Fill out the form below and we&apos;ll get back to
+          you shortly.
         </p>
       </motion.div>
 
@@ -123,7 +123,7 @@ export default function ContactPage() {
                   <>
                     <CheckCircle2 className="h-12 w-12 text-green-500" />
                     <CardTitle>Message Sent</CardTitle>
-                    <CardDescription>We'll get back to you within 24 hours.</CardDescription>
+                    <CardDescription>We&apos;ll get back to you within 24 hours.</CardDescription>
                   </>
                 ) : (
                   <>

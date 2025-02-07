@@ -62,7 +62,7 @@ export default function PricingPage() {
       >
         <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">Simple, Transparent Pricing</h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Choose the plan that best fits your organization's needs. All plans include our core security features.
+          Choose the plan that best fits your organization&apos;s needs. All plans include our core security features.
         </p>
       </motion.div>
 
