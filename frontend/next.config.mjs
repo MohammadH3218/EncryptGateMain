@@ -2,7 +2,7 @@ let userConfig = undefined;
 try {
   userConfig = await import('./v0-user-next.config');
 } catch (e) {
-  // ignore error
+  // Ignore error if the user-specific config file does not exist
 }
 
 /** @type {import('next').NextConfig} */
@@ -16,11 +16,18 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Disable experimental Webpack features
   experimental: {
-    // Disabled experimental features to prevent build errors
     webpackBuildWorker: false,
     parallelServerBuildTraces: false,
     parallelServerCompiles: false,
+  },
+  webpack: (config) => {
+    // Disable worker threads, parallel builds, and reduce logging to prevent memory issues
+    config.infrastructureLogging = { level: 'error' };
+    config.parallelism = 1; // Disable Webpack parallelism
+    config.experiments = { asyncWebAssembly: false, layers: false }; // Ensure no experimental Webpack features are on
+    return config;
   },
   env: {
     AWS_REGION: process.env.AWS_REGION,
@@ -30,6 +37,7 @@ const nextConfig = {
   },
 };
 
+// Function to merge user-specific config if present
 mergeConfig(nextConfig, userConfig);
 
 function mergeConfig(nextConfig, userConfig) {
