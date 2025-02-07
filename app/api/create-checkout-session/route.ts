@@ -1,17 +1,15 @@
-import { NextRequest, NextResponse } from "next/server"
-import Stripe from "stripe"
+import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-01-27.acacia",
+  apiVersion: "2022-11-15",
+});
 
-})
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { priceId } = await req.json();
 
     if (!priceId) {
-      console.error("Missing priceId");
       return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
     }
 
@@ -24,8 +22,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ sessionUrl: session.url });
-  } catch (error: any) {
-    console.error("Stripe Error:", error);  // Log the full error
+  } catch (error) {
+    console.error("Stripe Error:", error);
     return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 });
   }
 }
