@@ -10,6 +10,10 @@ AWS.config.update({
 const ses = new AWS.SES();
 
 export async function POST(req: Request) {
+  if (req.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405 });
+  }
+
   try {
     const { sender, recipient, subject, body } = await req.json();
 
@@ -29,8 +33,29 @@ export async function POST(req: Request) {
 
     await ses.sendEmail(params).promise();
 
-    return NextResponse.json({ message: 'Email sent successfully' });
+    // Add CORS headers to the response
+    const response = NextResponse.json({ message: 'Email sent successfully' });
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    return response;
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const response = NextResponse.json({ error: error.message }, { status: 500 });
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    return response;
   }
+}
+
+export async function OPTIONS() {
+  // Preflight request handler
+  const response = new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+  return response;
 }
