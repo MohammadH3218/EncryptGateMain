@@ -20,11 +20,12 @@ const nextConfig = {
     webpackBuildWorker: false,           // Disable the build worker
     parallelServerBuildTraces: false,    // Disable parallel build traces
     parallelServerCompiles: false,       // Disable parallel server compiles
-    layers: true,                        // Enable layers to prevent the Webpack error
   },
   webpack: (config) => {
-    config.infrastructureLogging = { level: 'error' }; // Reduce logging noise
-    config.parallelism = 1;                            // Disable Webpack parallelism to prevent memory issues
+    config.infrastructureLogging = { level: 'error' };   // Reduce logging
+    config.performance = { hints: false };               // Disable performance hints
+    config.optimization = { minimize: false };           // Disable minification temporarily
+    config.parallelism = 1;                              // Disable parallel builds
     return config;
   },
   env: {
