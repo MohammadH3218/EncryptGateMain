@@ -1,27 +1,44 @@
 {
+  "name": "encryptgate-marketing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
-    "@geist-ui/react": "^2.2.5",
-    "@radix-ui/react-label": "^2.1.2",
-    "@stripe/stripe-js": "^5.6.0",
-    "@vercel/speed-insights": "^1.1.0",
-    "autoprefixer": "^10.4.20",
-    "aws-sdk": "^2.1692.0",
-    "class-variance-authority": "^0.7.1",
-    "concurrently": "^9.1.2",
-    "framer-motion": "^12.4.0",
-    "lucide-react": "^0.474.0",
-    "next": "^15.1.6",
-    "next-themes": "^0.4.4",
-    "postcss": "^8.5.1",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@vercel/analytics": "^1.1.2",
+    "@vercel/speed-insights": "^1.0.9",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "encryptgate-marketing": "file:",
+    "framer-motion": "^11.0.3",
+    "geist": "^1.2.1",
+    "lucide-react": "^0.321.0",
+    "next": "^14.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "stripe": "^17.6.0",
-    "tailwind-merge": "^3.0.1",
-    "tailwindcss": "^4.0.4"
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^22.13.1",
-    "@types/react": "^19.0.8",
-    "typescript": "^5.7.3"
+    "@types/node": "^20.11.16",
+    "@types/react": "^18.2.52",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   }
 }

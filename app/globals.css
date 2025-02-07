@@ -58,12 +58,6 @@
   }
 }
 
-@layer components {
-  .btn {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
-  }
-}
-
 .animate-gradient {
   background-size: 400%;
   -webkit-animation: gradient 8s ease infinite;

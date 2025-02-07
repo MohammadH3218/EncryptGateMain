@@ -34,7 +34,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto pt-32 pb-32 md:pt-40 md:pb-40">
+    <div className="container pt-32 pb-32 md:pt-40 md:pb-40">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-3xl font-bold tracking-tight text-center sm:text-4xl mb-16">Our Values</h2>
         <div className="grid gap-8 md:grid-cols-2">

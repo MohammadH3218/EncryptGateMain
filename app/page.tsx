@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <section className="relative pt-32 md:pt-40">
-        <div className="container mx-auto relative z-10">
+        <div className="container relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -62,7 +62,7 @@ export default function Home() {
       </section>
 
       <section className="mt-32 md:mt-40">
-        <div className="container mx-auto">
+        <div className="container">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Enterprise-Grade Security Features</h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
@@ -138,7 +138,7 @@ export default function Home() {
       </section>
 
       <section className="mt-32 mb-32 md:mt-40 md:mb-40">
-        <div className="container mx-auto">
+        <div className="container">
           <div className="relative isolate overflow-hidden rounded-3xl bg-gradient-to-b from-gray-900 to-gray-800 px-6 py-24 text-center shadow-2xl sm:px-16">
             <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Start Securing Your Email Communications Today

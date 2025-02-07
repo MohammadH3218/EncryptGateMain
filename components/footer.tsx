@@ -37,7 +37,7 @@ export function Footer() {
           <p>© {new Date().getFullYear()} EncryptGate. All rights reserved.</p>
         </div>
       </div>
-    </footer> 
+    </footer>
   )
 }
 
