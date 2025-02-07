@@ -3,14 +3,19 @@
 import { Check } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { loadStripe } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { useToast } from "@/components/ui/toast"
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 const plans = [
   {
     name: "Starter",
     price: "$99",
+    priceId: "prod_Rj4zOAMOSHgKkJ", // Replace with your actual Stripe Price ID
     description: "Perfect for small teams getting started with email security",
     features: [
       "Up to 10 users",
@@ -23,6 +28,7 @@ const plans = [
   {
     name: "Professional",
     price: "$299",
+    priceId: "prod_Rj58cmTfCNV0YI", // Replace with your actual Stripe Price ID
     description: "Advanced features for growing organizations",
     features: [
       "Up to 50 users",
@@ -52,6 +58,43 @@ const plans = [
 ]
 
 export default function PricingPage() {
+  const { toast } = useToast()
+
+  const handleCheckout = async (priceId: string) => {
+    try {
+      const stripe = await stripePromise
+
+      if (!stripe) {
+        toast({ message: "Stripe failed to initialize", type: "error" })
+        return
+      }
+
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ priceId }),
+      })
+
+      if (response.ok) {
+        const { sessionUrl } = await response.json()
+        window.location.href = sessionUrl
+      } else {
+        toast({
+          message: "Payment initiation failed. Please try again later.",
+          type: "error",
+        })
+      }
+    } catch (error) {
+      console.error("Checkout Error:", error)
+      toast({
+        message: "There was an error initiating the payment. Please try again later.",
+        type: "error",
+      })
+    }
+  }
+
   return (
     <div className="container pt-32 pb-32 md:pt-40 md:pb-40">
       <motion.div
@@ -98,13 +141,11 @@ export default function PricingPage() {
               </ul>
             </CardContent>
             <CardFooter className="mt-auto">
-              {index === 0 && (
-                <Button className="w-full" variant="outline">
+              {plan.priceId ? (
+                <Button className="w-full" onClick={() => handleCheckout(plan.priceId)}>
                   Continue
                 </Button>
-              )}
-              {index === 1 && <Button className="w-full">Continue</Button>}
-              {index === 2 && (
+              ) : (
                 <Link href="/contact" className="w-full">
                   <Button className="w-full" variant="outline">
                     Contact Us
@@ -118,4 +159,3 @@ export default function PricingPage() {
     </div>
   )
 }
-
