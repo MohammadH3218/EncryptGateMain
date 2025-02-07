@@ -35,7 +35,10 @@ function ContactForm() {
     }
 
     try {
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "https://encryptgate.net"
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000"
+      
+      // Log the API base URL to verify it's correct
+      console.log("API Base URL:", apiBaseUrl)
 
       // Make a POST request to your backend /send-email route
       const response = await fetch(`${apiBaseUrl}/send-email`, {
