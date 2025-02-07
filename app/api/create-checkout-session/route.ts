@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Stripe Error:", error);
 
-    // Return detailed error response
+    // Return detailed error responses
     return NextResponse.json({
       error: error.message || "Failed to create subscription checkout session",
       type: error.type,
