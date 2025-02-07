@@ -16,17 +16,15 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Disable experimental Webpack features
   experimental: {
-    webpackBuildWorker: false,
-    parallelServerBuildTraces: false,
-    parallelServerCompiles: false,
+    webpackBuildWorker: false,           // Disable the build worker
+    parallelServerBuildTraces: false,    // Disable parallel build traces
+    parallelServerCompiles: false,       // Disable parallel server compiles
+    layers: true,                        // Enable layers to prevent the Webpack error
   },
   webpack: (config) => {
-    // Disable worker threads, parallel builds, and reduce logging to prevent memory issues
-    config.infrastructureLogging = { level: 'error' };
-    config.parallelism = 1; // Disable Webpack parallelism
-    config.experiments = { asyncWebAssembly: false, layers: false }; // Ensure no experimental Webpack features are on
+    config.infrastructureLogging = { level: 'error' }; // Reduce logging noise
+    config.parallelism = 1;                            // Disable Webpack parallelism to prevent memory issues
     return config;
   },
   env: {
@@ -37,7 +35,7 @@ const nextConfig = {
   },
 };
 
-// Function to merge user-specific config if present
+// Merge user-specific config if present
 mergeConfig(nextConfig, userConfig);
 
 function mergeConfig(nextConfig, userConfig) {
