@@ -1,30 +1,30 @@
-// app/api/create-checkout-session/route.ts
+import { NextRequest, NextResponse } from "next/server"
+import Stripe from "stripe"
 
-import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2022-11-15",
+})
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-01-27.acacia',
-});
-
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
+    const { priceId } = await req.json()
+
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       line_items: [
         {
-          price: 'YOUR_STRIPE_PRICE_ID',
+          price: priceId,
           quantity: 1,
         },
       ],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/cancel`,
-    });
+      mode: "payment",
+      success_url: `${req.nextUrl.origin}/success`,
+      cancel_url: `${req.nextUrl.origin}/cancel`,
+    })
 
-    return NextResponse.json({ sessionUrl: session.url });
+    return NextResponse.json({ sessionUrl: session.url })
   } catch (error) {
-    console.error('Stripe session creation error:', error);
-    return NextResponse.json({ error: 'Failed to create Stripe session' }, { status: 500 });
+    console.error("Stripe Error:", error)
+    return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 })
   }
 }

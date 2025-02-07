@@ -66,29 +66,39 @@ interface ToastOptions {
   type: "success" | "error"
 }
 
-export function useToast() {
+interface ToastContextProps {
+  toast: (options: ToastOptions) => void
+}
+
+const ToastContext = React.createContext<ToastContextProps | undefined>(undefined)
+
+export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = React.useState<ToastOptions[]>([])
 
-  const addToast = React.useCallback((options: ToastOptions) => {
-    setToasts((prevToasts) => [...prevToasts, options])
-  }, [])
+  const addToast = (options: ToastOptions) => {
+    setToasts((prev) => [...prev, options])
+  }
 
-  const removeToast = React.useCallback((index: number) => {
-    setToasts((prevToasts) => prevToasts.filter((_, i) => i !== index))
-  }, [])
+  const removeToast = (index: number) => {
+    setToasts((prev) => prev.filter((_, i) => i !== index))
+  }
 
-  const ToastContainer = React.useCallback(() => {
-    return (
+  return (
+    <ToastContext.Provider value={{ toast: addToast }}>
+      {children}
       <div className="fixed bottom-0 right-0 z-50 p-4 space-y-4">
         {toasts.map((toast, index) => (
           <Toast key={index} message={toast.message} type={toast.type} onClose={() => removeToast(index)} />
         ))}
       </div>
-    )
-  }, [toasts, removeToast])
+    </ToastContext.Provider>
+  )
+}
 
-  return {
-    toast: addToast,
-    ToastContainer,
+export function useToast() {
+  const context = React.useContext(ToastContext)
+  if (!context) {
+    throw new Error("useToast must be used within a ToastProvider")
   }
+  return context
 }

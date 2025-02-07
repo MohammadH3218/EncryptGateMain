@@ -1,24 +1,14 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Mail, MessageSquare, Building, User, CreditCard } from "lucide-react"
+import { Mail, MessageSquare, Building, User } from "lucide-react"
 import React from "react"
-import { useToast } from "@/components/ui/toast"
+import { ToastProvider, useToast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-
-function ToastProvider({ children }: { children: React.ReactNode }) {
-  const { ToastContainer } = useToast()
-  return (
-    <>
-      {children}
-      <ToastContainer />
-    </>
-  )
-}
 
 export default function ContactPage() {
   return (
@@ -55,46 +45,20 @@ function ContactForm() {
 
       if (response.ok) {
         toast({
-          message: "Message sent successfully!",
+          message: "Message sent: We'll get back to you as soon as possible.",
           type: "success",
         })
         form.reset()
       } else {
+        const errorData = await response.json()
         toast({
-          message: "Failed to send message. Please try again later.",
+          message: errorData.error || "Failed to send your message. Please try again later.",
           type: "error",
         })
       }
     } catch {
       toast({
-        message: "An error occurred while sending the message.",
-        type: "error",
-      })
-    }
-  }
-
-  const handlePayment = async () => {
-    try {
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ priceId: "YOUR_STRIPE_PRICE_ID" }),
-      })
-
-      if (response.ok) {
-        const { sessionUrl } = await response.json()
-        window.location.href = sessionUrl
-      } else {
-        toast({
-          message: "Payment initiation failed. Please try again later.",
-          type: "error",
-        })
-      }
-    } catch {
-      toast({
-        message: "An error occurred while initiating payment.",
+        message: "There was an error sending your message. Please try again later.",
         type: "error",
       })
     }
@@ -110,8 +74,8 @@ function ContactForm() {
       >
         <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">Get in Touch</h1>
         <p className="mt-6 text-lg leading-8 text-muted-foreground">
-          Have questions about EncryptGate? We&apos;re here to help. Fill out the form below and we&apos;ll get back to
-          you shortly.
+          Have questions about EncryptGate? We are here to help. Fill out the form below and we will get back to you
+          shortly.
         </p>
       </motion.div>
 
@@ -166,11 +130,6 @@ function ContactForm() {
                 Send Message
               </Button>
             </form>
-
-            <Button onClick={handlePayment} size="lg" className="mt-6">
-              <CreditCard className="mr-2 h-4 w-4" />
-              Proceed to Payment
-            </Button>
           </CardContent>
         </Card>
       </motion.div>
