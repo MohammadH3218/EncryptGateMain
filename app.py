@@ -3,7 +3,7 @@ from flask_cors import CORS
 from services.email_service import EmailService
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) #test
 
 # Initialize email service
 email_service = EmailService()
