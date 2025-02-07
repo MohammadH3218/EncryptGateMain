@@ -6,11 +6,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 })
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const { priceId } = await req.json();
 
     if (!priceId) {
+      console.error("Missing priceId");
       return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
     }
 
@@ -23,8 +24,8 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ sessionUrl: session.url });
-  } catch (error) {
-    console.error("Stripe Error:", error);  // Log the error here
+  } catch (error: any) {
+    console.error("Stripe Error:", error);  // Log the full error
     return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 });
   }
 }
