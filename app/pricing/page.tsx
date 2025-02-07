@@ -15,7 +15,7 @@ const plans = [
   {
     name: "Starter",
     price: "$99",
-    priceId: "prod_Rj4zOAMOSHgKkJ", // Replace with your actual Stripe Price ID
+    priceId: "price_1QpcvdB0UHxAO77NJEi39pgK", // Replace with your actual Stripe Price ID
     description: "Perfect for small teams getting started with email security",
     features: [
       "Up to 10 users",
@@ -28,7 +28,7 @@ const plans = [
   {
     name: "Professional",
     price: "$299",
-    priceId: "prod_Rj58cmTfCNV0YI", // Replace with your actual Stripe Price ID
+    priceId: "price_1Qpcy8B0UHxAO77NiR2hkPHZ", // Replace with your actual Stripe Price ID
     description: "Advanced features for growing organizations",
     features: [
       "Up to 50 users",

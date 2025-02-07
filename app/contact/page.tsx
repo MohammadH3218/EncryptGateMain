@@ -35,7 +35,10 @@ function ContactForm() {
     }
 
     try {
-      const response = await fetch("/send-email", {
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000"
+
+      // Make a POST request to your backend /send-email route
+      const response = await fetch(`${apiBaseUrl}/send-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +59,7 @@ function ContactForm() {
           type: "error",
         })
       }
-    } catch {
+    } catch (error) {
       toast({
         message: "There was an error sending your message. Please try again later.",
         type: "error",
