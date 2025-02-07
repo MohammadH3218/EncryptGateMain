@@ -7,7 +7,7 @@ import { loadStripe } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { useToast } from "@/components/ui/toast"
+import { ToastProvider, useToast } from "@/components/ui/toast"
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
@@ -58,6 +58,14 @@ const plans = [
 ]
 
 export default function PricingPage() {
+  return (
+    <ToastProvider>
+      <PricingPageContent />
+    </ToastProvider>
+  )
+}
+
+function PricingPageContent() {
   const { toast } = useToast()
 
   const handleCheckout = async (priceId: string) => {
