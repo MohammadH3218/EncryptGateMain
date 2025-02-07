@@ -1,22 +1,39 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Mail, MessageSquare, Building, User, CheckCircle2, XCircle } from "lucide-react"
-import type React from "react"
-import { useState } from "react"
+import { Mail, MessageSquare, Building, User, CreditCard } from "lucide-react"
+import React from "react"
+import { useToast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-type SubmissionStatus = "idle" | "success" | "error"
+function ToastProvider({ children }: { children: React.ReactNode }) {
+  const { ToastContainer } = useToast()
+  return (
+    <>
+      {children}
+      <ToastContainer />
+    </>
+  )
+}
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<SubmissionStatus>("idle")
+  return (
+    <ToastProvider>
+      <ContactForm />
+    </ToastProvider>
+  )
+}
+
+function ContactForm() {
+  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const form = e.target as HTMLFormElement
 
     const formData = {
@@ -28,7 +45,7 @@ export default function ContactPage() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/send-email", {
+      const response = await fetch("/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,12 +54,49 @@ export default function ContactPage() {
       })
 
       if (response.ok) {
-        setStatus("success")
+        toast({
+          message: "Message sent successfully!",
+          type: "success",
+        })
+        form.reset()
       } else {
-        setStatus("error")
+        toast({
+          message: "Failed to send message. Please try again later.",
+          type: "error",
+        })
       }
     } catch {
-      setStatus("error")
+      toast({
+        message: "An error occurred while sending the message.",
+        type: "error",
+      })
+    }
+  }
+
+  const handlePayment = async () => {
+    try {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ priceId: "YOUR_STRIPE_PRICE_ID" }),
+      })
+
+      if (response.ok) {
+        const { sessionUrl } = await response.json()
+        window.location.href = sessionUrl
+      } else {
+        toast({
+          message: "Payment initiation failed. Please try again later.",
+          type: "error",
+        })
+      }
+    } catch {
+      toast({
+        message: "An error occurred while initiating payment.",
+        type: "error",
+      })
     }
   }
 
@@ -67,77 +121,59 @@ export default function ContactPage() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="mx-auto mt-16 max-w-xl"
       >
-        {status === "idle" ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Us</CardTitle>
-              <CardDescription>
-                Fill out the form below and our team will get back to you within 24 hours.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="grid gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="name" placeholder="John Doe" className="pl-9" required />
-                  </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Contact Us</CardTitle>
+            <CardDescription>
+              Fill out the form below and our team will get back to you within 24 hours.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="grid gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Name</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input id="name" placeholder="John Doe" className="pl-9" required />
                 </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="company">Company</Label>
-                  <div className="relative">
-                    <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="company" placeholder="Acme Inc." className="pl-9" />
-                  </div>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="email" type="email" placeholder="john@example.com" className="pl-9" required />
-                  </div>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="message">Message</Label>
-                  <div className="relative">
-                    <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Textarea id="message" placeholder="How can we help you?" className="min-h-[120px] pl-9" required />
-                  </div>
-                </div>
-
-                <Button type="submit" size="lg">
-                  Send Message
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardContent className="pt-6 pb-6">
-              <div className="flex flex-col items-center justify-center text-center space-y-4">
-                {status === "success" ? (
-                  <>
-                    <CheckCircle2 className="h-12 w-12 text-green-500" />
-                    <CardTitle>Message Sent</CardTitle>
-                    <CardDescription>We&apos;ll get back to you within 24 hours.</CardDescription>
-                  </>
-                ) : (
-                  <>
-                    <XCircle className="h-12 w-12 text-red-500" />
-                    <CardTitle>Message Not Sent</CardTitle>
-                    <CardDescription>Please try again later.</CardDescription>
-                  </>
-                )}
               </div>
-            </CardContent>
-          </Card>
-        )}
+
+              <div className="grid gap-2">
+                <Label htmlFor="company">Company</Label>
+                <div className="relative">
+                  <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input id="company" placeholder="Acme Inc." className="pl-9" />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input id="email" type="email" placeholder="john@example.com" className="pl-9" required />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="message">Message</Label>
+                <div className="relative">
+                  <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Textarea id="message" placeholder="How can we help you?" className="min-h-[120px] pl-9" required />
+                </div>
+              </div>
+
+              <Button type="submit" size="lg">
+                Send Message
+              </Button>
+            </form>
+
+            <Button onClick={handlePayment} size="lg" className="mt-6">
+              <CreditCard className="mr-2 h-4 w-4" />
+              Proceed to Payment
+            </Button>
+          </CardContent>
+        </Card>
       </motion.div>
     </div>
   )
 }
-
