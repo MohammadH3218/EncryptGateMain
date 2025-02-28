@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 
 export default function Home() {
   return (
-    <>
+    <div className="container mx-auto">
       <section className="relative pt-32 md:pt-40">
         <div className="container relative z-10">
           <motion.div
@@ -175,7 +175,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   )
 }
 

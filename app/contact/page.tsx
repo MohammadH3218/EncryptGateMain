@@ -13,7 +13,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function ContactPage() {
   return (
     <ToastProvider>
-      <ContactForm />
+      <div className="container mx-auto pt-32 pb-32 md:pt-40 md:pb-40">
+        <ContactForm />
+      </div>
     </ToastProvider>
   )
 }

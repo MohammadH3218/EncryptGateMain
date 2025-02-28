@@ -60,7 +60,9 @@ const plans = [
 export default function PricingPage() {
   return (
     <ToastProvider>
-      <PricingPageContent />
+      <div className="container mx-auto">
+        <PricingPageContent />
+      </div>
     </ToastProvider>
   )
 }
