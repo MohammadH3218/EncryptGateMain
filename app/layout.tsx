@@ -2,8 +2,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
-import type React from "react" // Added import for React
-
+import type React from "react"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navigation } from "@/components/navigation"
@@ -27,7 +26,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="encryptgate-theme">
           <div className="relative flex min-h-screen flex-col">
             <Navigation />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 w-full">{children}</main> {/* Added w-full here */}
             <Footer />
           </div>
         </ThemeProvider>
@@ -37,4 +36,3 @@ export default function RootLayout({
     </html>
   )
 }
-
