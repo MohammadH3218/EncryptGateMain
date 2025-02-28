@@ -17,13 +17,13 @@ export function Navigation() {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
-      <nav className="container flex h-24 items-center justify-between">
+      <nav className="container flex h-24 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-3">
           <Shield className="h-8 w-8" />
           <span className="text-xl font-bold">EncryptGate</span>
         </Link>
 
-        <div className="flex gap-x-12">
+        <div className="flex gap-x-8">
           {navigation.map((item) => (
             <Link
               key={item.name}
