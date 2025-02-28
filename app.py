@@ -4,7 +4,7 @@ from services.email_service import EmailService
 app = Flask(__name__)
 email_service = EmailService()
 
-@app.route('/send-email', methods=['POST'])
+@app.route('/send-email', methods=['POST']) #test
 def send_email():
     try:
         data = request.json
