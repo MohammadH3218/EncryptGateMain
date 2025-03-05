@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-// Use the latest stable Stripe API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Use the correct environment variable for Stripe secret key
+const stripe = new Stripe(process.env.STRIPE_SECRET_ACCESS_KEY!, {
   apiVersion: "2025-02-24.acacia",
 });
 
 export async function POST(req: NextRequest) {
   // Log environment variables for debugging
   console.log('Stripe Route Environment:', {
-    STRIPE_SECRET_KEY: !!process.env.STRIPE_SECRET_KEY,
+    STRIPE_SECRET_ACCESS_KEY: !!process.env.STRIPE_SECRET_ACCESS_KEY,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL
   });
 
