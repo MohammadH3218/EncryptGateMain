@@ -17,6 +17,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@stripe/stripe-js": "^5.6.0",
     "@types/aws-sdk": "^0.0.42",
+    "@types/stripe": "^8.0.416",
     "@vercel/analytics": "^1.1.2",
     "@vercel/speed-insights": "^1.0.9",
     "aws-sdk": "^2.1692.0",
@@ -30,7 +31,7 @@
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "stripe": "^17.6.0",
+    "stripe": "^17.7.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },

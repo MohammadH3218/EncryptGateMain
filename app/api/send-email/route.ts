@@ -1,24 +1,37 @@
 import { NextResponse } from 'next/server';
 import AWS from 'aws-sdk';
 
-// Add more detailed configuration
-AWS.config.update({
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
-  region: process.env.REGION || 'us-east-1',
-});
-
-const ses = new AWS.SES({ apiVersion: '2010-12-01' });
-
 export async function POST(req: Request) {
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
-  }
+  // Extensive logging for debugging
+  console.log('Environment Variables:', {
+    ACCESS_KEY_ID: !!process.env.ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY: !!process.env.SECRET_ACCESS_KEY,
+    REGION: process.env.REGION,
+    EMAIL_SENDER: process.env.EMAIL_SENDER
+  });
 
   try {
-    // Additional config validation
-    if (!process.env.ACCESS_KEY_ID || !process.env.SECRET_ACCESS_KEY) {
-      throw new Error('AWS credentials are not properly configured');
+    // Validate credentials with more detailed checks
+    if (!process.env.ACCESS_KEY_ID) {
+      console.error('Missing ACCESS_KEY_ID');
+      throw new Error('ACCESS_KEY_ID is not configured');
+    }
+    if (!process.env.SECRET_ACCESS_KEY) {
+      console.error('Missing SECRET_ACCESS_KEY');
+      throw new Error('SECRET_ACCESS_KEY is not configured');
+    }
+
+    // Explicit AWS configuration with error handling
+    AWS.config.update({
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      region: process.env.REGION || 'us-east-1'
+    });
+
+    const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+
+    if (req.method !== 'POST') {
+      return new Response('Method Not Allowed', { status: 405 });
     }
 
     const { sender, recipient, subject, body } = await req.json();
@@ -37,31 +50,49 @@ export async function POST(req: Request) {
       ReplyToAddresses: [sender],
     };
 
-    const result = await ses.sendEmail(params).promise();
+    // Add more detailed error logging for SES
+    try {
+      const result = await ses.sendEmail(params).promise();
 
-    // Add CORS headers to the response
-    const response = NextResponse.json({ 
-      message: 'Email sent successfully',
-      messageId: result.MessageId 
-    });
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+      const response = NextResponse.json({ 
+        message: 'Email sent successfully',
+        messageId: result.MessageId 
+      });
 
-    return response;
+      // CORS headers
+      response.headers.set('Access-Control-Allow-Origin', '*');
+      response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
+      return response;
+    } catch (sesError: any) {
+      console.error('SES Specific Error:', {
+        code: sesError.code,
+        message: sesError.message,
+        originalError: sesError
+      });
+      throw sesError;
+    }
   } catch (error: any) {
-    console.error('Email sending error:', error);
+    console.error('Comprehensive Email Sending Error:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack,
+      originalError: error
+    });
+
     const response = NextResponse.json({ 
-      error: error.message,
-      details: error.code || 'Unknown error' 
+      error: 'Failed to send email',
+      details: error.message || 'Unknown error',
+      code: error.code
     }, { status: 500 });
+
     response.headers.set('Access-Control-Allow-Origin', '*');
     return response;
   }
 }
 
 export async function OPTIONS() {
-  // Preflight request handler
   const response = new Response(null, {
     status: 204,
     headers: {
